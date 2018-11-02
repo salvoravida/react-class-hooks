@@ -78,7 +78,6 @@ Onestly i think that class matters when you write complex WebApp, but it's up to
 
 Then, this tweet let me think more about hooks.
 <blockquote class="twitter-tweet" data-lang="it"><p lang="en" dir="ltr">As <a href="https://twitter.com/sophiebits?ref_src=twsrc%5Etfw">@sophiebits</a> noticed it’s interesting that almost all alternative designs people suggest after seeing Hooks are completely incompatible with writing custom Hooks. And custom Hooks are the thing we like most about this model.</p>&mdash; Dan Abramov (@dan_abramov) <a href="https://twitter.com/dan_abramov/status/1055986941739655170?ref_src=twsrc%5Etfw">27 ottobre 2018</a></blockquote>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 Since i prefer `this`, the only `real` advantage of using hooks is writing custom ones, when needed.
 
