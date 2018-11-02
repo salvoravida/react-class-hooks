@@ -74,9 +74,9 @@ export const useClassWindowSize = (options = {}) => {
 
 ## Abstract
 As React Hooks goes into the scene, some days ago, my first impression was totally negative.<br/>
-Onestly i think that class matters when you write complex WebApp, but it's up to personal code-style.
+Honestly i think that class matters when you write complex WebApp, but it's up to personal code-style.
 
-Then, this tweet let me think more about hooks.
+Then, this tweet makes me think more about hooks.
 <blockquote class="twitter-tweet" data-lang="it"><p lang="en" dir="ltr">As <a href="https://twitter.com/sophiebits?ref_src=twsrc%5Etfw">@sophiebits</a> noticed it’s interesting that almost all alternative designs people suggest after seeing Hooks are completely incompatible with writing custom Hooks. And custom Hooks are the thing we like most about this model.</p>&mdash; Dan Abramov (@dan_abramov) <a href="https://twitter.com/dan_abramov/status/1055986941739655170?ref_src=twsrc%5Etfw">27 ottobre 2018</a></blockquote>
 
 Since i prefer `this`, the only `real` advantage of using hooks is writing custom ones, when needed.
@@ -168,9 +168,8 @@ class App extends React.PureComponent {
 ```
 https://codesandbox.io/s/v8y8o3m737
 
-Ok, i know that we should put condition inside hooks, for order rule. 
-But because of special Named hook,  `const useMyLoggerState = useClassState.create("MyLogger");` 
-it will not break anonymous useClass*** hooks order.
+I know that hooks should not be inside a condition, because it breaks the order rule, but a Named Hooks 
+does not break anonymous hooks stack, as it has a isolated named own state.
 Note that named hooks share context so calling 2 times the same Named Hook in the same render phase,
 will get the same value! 
 ```javascript
