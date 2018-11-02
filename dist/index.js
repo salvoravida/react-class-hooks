@@ -1,0 +1,405 @@
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var React = _interopDefault(require('react'));
+
+var isProduction = process.env.NODE_ENV === 'production';
+var prefix = 'Invariant failed';
+function invariant(condition, message) {
+  if (condition) {
+    return;
+  }
+
+  if (isProduction) {
+    throw new Error(prefix);
+  } else {
+    throw new Error(prefix + ": " + (message || ''));
+  }
+}
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+var slicedToArray = function () {
+  function sliceIterator(arr, i) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"]) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  }
+
+  return function (arr, i) {
+    if (Array.isArray(arr)) {
+      return arr;
+    } else if (Symbol.iterator in Object(arr)) {
+      return sliceIterator(arr, i);
+    } else {
+      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    }
+  };
+}();
+
+var toArray = function (arr) {
+  return Array.isArray(arr) ? arr : Array.from(arr);
+};
+
+var toConsumableArray = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
+
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
+
+// inject None effects
+React.PureComponent.prototype.componentDidMount = function () {};
+React.Component.prototype.componentDidMount = function () {};
+
+//TODO - polyfill
+invariant(typeof Symbol === 'function' && Symbol.for, 'react-class-hooks needs Symbols!');
+
+// Separate objects for better debugging.
+var MAGIC_STATES = Symbol.for('magicStates');
+var MAGIC_EFFECTS = Symbol.for('magicEffects');
+var MAGIC_MEMOS = Symbol.for('magicMemos');
+
+function getMagicSelf() {
+    invariant(React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current, 'You are using Hooks outside of "render" React.Component Method!');
+
+    return React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current.stateNode;
+}
+
+function checkSymbol(name, keySymbol) {
+    invariant((typeof keySymbol === 'undefined' ? 'undefined' : _typeof(keySymbol)) === 'symbol', name + ' - Expected a Symbol for key!');
+}
+
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
+
+function useClassStateKey(keySymbol, initialValue) {
+    checkSymbol('useClassStateKey', keySymbol);
+
+    var self = getMagicSelf();
+
+    //first time Render && first Hook
+    if (!self[MAGIC_STATES]) self[MAGIC_STATES] = {};
+
+    //first time Render -> assign initial Value and create Setter
+    if (!self[MAGIC_STATES].hasOwnProperty(keySymbol)) {
+        self[MAGIC_STATES][keySymbol] = {
+            value: initialValue,
+            setValue: function setValue(value) {
+                self[MAGIC_STATES][keySymbol].value = value;
+                if (self.updater.isMounted(self)) self.forceUpdate();
+            }
+        };
+    }
+
+    var _self$MAGIC_STATES$ke = self[MAGIC_STATES][keySymbol],
+        value = _self$MAGIC_STATES$ke.value,
+        setValue = _self$MAGIC_STATES$ke.setValue;
+
+    return [value, setValue];
+}
+
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
+
+var useClassEffectKey = function useClassEffectKey(keySymbol, creator, inputs) {
+    var onlyDidUpdate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+    checkSymbol('useClassEffect', keySymbol);
+    invariant(typeof creator === 'function', 'Creator should be a function!');
+    invariant(!inputs || Array.isArray(inputs), 'inputs should be an array!');
+
+    var self = getMagicSelf();
+
+    //create MAGIC_EFFECTS if not exists
+    if (!self[MAGIC_EFFECTS]) self[MAGIC_EFFECTS] = {};
+
+    //First Render -> Assign creator, inputs and inject methods
+    //TODO didCatch
+    if (!self[MAGIC_EFFECTS].hasOwnProperty(keySymbol)) {
+        self[MAGIC_EFFECTS][keySymbol] = {
+            creator: creator,
+            inputs: inputs
+        };
+
+        if (!onlyDidUpdate) {
+            //inject componentDidMount
+            var didMount = typeof self.componentDidMount === 'function' ? self.componentDidMount.bind(self) : undefined;
+            self.componentDidMount = function () {
+                self[MAGIC_EFFECTS][keySymbol].cleaner = self[MAGIC_EFFECTS][keySymbol].creator();
+                didMount && didMount();
+            };
+        }
+
+        //inject componentDidUpdate
+        var didUpdate = typeof self.componentDidUpdate === 'function' ? self.componentDidUpdate.bind(self) : undefined;
+        self.componentDidUpdate = function () {
+            //execute if no inputs!
+            var execute = !self[MAGIC_EFFECTS][keySymbol].inputs;
+            //check if input array has values and values changed
+            if (!execute) {
+                self[MAGIC_EFFECTS][keySymbol].inputs.forEach(function (input, index) {
+                    execute = execute || self[MAGIC_EFFECTS][keySymbol].prevInputs[index] !== input;
+                });
+            }
+            if (execute) {
+                self[MAGIC_EFFECTS][keySymbol].cleaner && self[MAGIC_EFFECTS][keySymbol].cleaner();
+                self[MAGIC_EFFECTS][keySymbol].cleaner = self[MAGIC_EFFECTS][keySymbol].creator();
+            }
+            didUpdate && didUpdate.apply(undefined, arguments);
+        };
+
+        //inject componentWillUnmount
+        var unmount = typeof self.componentWillUnmount === 'function' ? self.componentWillUnmount.bind(self) : undefined;
+        self.componentWillUnmount = function () {
+            self[MAGIC_EFFECTS][keySymbol].cleaner && self[MAGIC_EFFECTS][keySymbol].cleaner();
+            unmount && unmount();
+        };
+    } else {
+        //next renders
+        self[MAGIC_EFFECTS][keySymbol] = {
+            prevInputs: self[MAGIC_EFFECTS][keySymbol].inputs,
+            cleaner: self[MAGIC_EFFECTS][keySymbol].cleaner,
+            creator: creator,
+            inputs: inputs
+        };
+    }
+};
+
+function useClassEffectExist(keySymbol) {
+    var self = getMagicSelf();
+    return !!self[MAGIC_EFFECTS] && !!self[MAGIC_EFFECTS].hasOwnProperty(keySymbol);
+}
+
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
+
+function MagicStack(StackName) {
+    var _this = this;
+
+    this.name = StackName;
+    this.symbol = Symbol(this.name + '.Stack');
+    this.cleanSymbol = Symbol(this.name + '.Stack.Cleaner');
+    this.keys = [];
+
+    this.getKey = function (stackIndex) {
+        var len = _this.keys.length;
+        //create if not exist
+        if (stackIndex > len) {
+            for (var i = len; i < stackIndex; i += 1) {
+                _this.keys.push(Symbol(_this.name + '-' + i));
+            }
+        }
+        return _this.keys[stackIndex - 1];
+    };
+}
+
+function useMagicStack(magicStack, hook, _ref) {
+    var _ref2 = toArray(_ref),
+        args = _ref2.slice(0);
+
+    //no setter - just clean stack not re-render!!
+    var _useClassStateKey = useClassStateKey(magicStack.symbol, {
+        counter: 0
+    }),
+        _useClassStateKey2 = slicedToArray(_useClassStateKey, 1),
+        stack = _useClassStateKey2[0];
+
+    //optimization after first call in the same rendering phase
+
+
+    if (!useClassEffectExist(magicStack.cleanSymbol)) {
+        //clean stack after render
+        useClassEffectKey(magicStack.cleanSymbol, function () {
+            stack.counter = 0;
+        });
+    }
+
+    //update stack counter
+    stack.counter += 1;
+
+    return hook.apply(undefined, [magicStack.getKey(stack.counter)].concat(toConsumableArray(args)));
+}
+
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
+
+function createHook(stackName, hook) {
+    var stack = new MagicStack(stackName);
+    return function () {
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        if (args && args.length && _typeof(args[0]) === 'symbol') return hook.apply(undefined, args);
+        return useMagicStack(stack, hook, [].concat(args));
+    };
+}
+
+function createNamedHook(name, hook) {
+    var keySymbol = Symbol(name);
+    return hook.bind(null, keySymbol);
+}
+
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
+
+var useClassState = createHook('States', useClassStateKey);
+
+useClassState.create = function (name) {
+  return createNamedHook(name, useClassStateKey);
+};
+
+useClassState.createStack = function (stackName) {
+  return createHook(stackName, useClassStateKey);
+};
+
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
+
+var useClassEffect = createHook('Effects', useClassEffectKey);
+
+useClassEffect.create = function (name) {
+    return createNamedHook(name, useClassEffectKey);
+};
+
+useClassEffect.createStack = function (stackName) {
+    return createHook(stackName, useClassEffectKey);
+};
+
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
+
+var useClassMemoKey = function useClassMemoKey(keySymbol, creator, inputs) {
+    checkSymbol('useClassMemo', keySymbol);
+    invariant(typeof creator === 'function', 'Creator should be a function!');
+    invariant(!inputs || Array.isArray(inputs), 'inputs should be an array!');
+
+    var self = getMagicSelf();
+
+    //create magic Memos if not exists
+    if (!self[MAGIC_MEMOS]) self[MAGIC_MEMOS] = {};
+
+    //First Render -> assign creator, inputs, value
+    if (!self[MAGIC_MEMOS].hasOwnProperty(keySymbol)) {
+        self[MAGIC_MEMOS][keySymbol] = {
+            creator: creator,
+            inputs: inputs,
+            value: creator()
+        };
+    } else {
+        //next renders
+        var execute = false;
+        if (!inputs) {
+            if (creator !== self[MAGIC_MEMOS][keySymbol].creator) {
+                execute = true;
+            }
+        } else {
+            inputs.forEach(function (input, index) {
+                execute = execute || self[MAGIC_MEMOS][keySymbol].inputs[index] !== input;
+            });
+        }
+        if (execute) {
+            self[MAGIC_MEMOS][keySymbol] = {
+                creator: creator,
+                inputs: inputs,
+                value: creator()
+            };
+        }
+    }
+
+    return self[MAGIC_MEMOS][keySymbol].value;
+};
+
+var useClassMemo = createHook('Memos', useClassMemoKey);
+
+useClassMemo.create = function (name) {
+    return createNamedHook(name, useClassMemoKey);
+};
+
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
+
+function useClassCallbackKey(keySymbol, callback, inputs) {
+  return useClassMemoKey(keySymbol, function () {
+    return callback;
+  }, inputs);
+}
+
+var useClassCallback = createHook('Callbacks', useClassCallbackKey);
+
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
+
+var useClassReducerKey = function useClassReducerKey(keySymbol, reducer, initialState) {
+    var _useClassStateKey = useClassStateKey(keySymbol, initialState),
+        _useClassStateKey2 = slicedToArray(_useClassStateKey, 2),
+        state = _useClassStateKey2[0],
+        setState = _useClassStateKey2[1];
+
+    function dispatch(action) {
+        var nextState = reducer(state, action);
+        setState(nextState);
+    }
+
+    return [state, dispatch];
+};
+
+var useClassReducer = createHook('Reducers', useClassReducerKey);
+
+useClassReducer.create = function (name) {
+    return createNamedHook(name, useClassReducerKey);
+};
+
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
+
+exports.useClassState = useClassState;
+exports.useClassEffect = useClassEffect;
+exports.useClassMemo = useClassMemo;
+exports.useClassCallback = useClassCallback;
+exports.useClassReducer = useClassReducer;
