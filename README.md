@@ -1,5 +1,5 @@
 
-# react-class-hooks [![npm version](https://img.shields.io/npm/v/react-class-hooks.svg?style=flat)](https://www.npmjs.org/package/redux-first-history) 
+# react-class-hooks [![npm version](https://img.shields.io/npm/v/react-class-hooks.svg?style=flat)](https://www.npmjs.org/package/react-class-hooks) 
 
 Use Custom Hooks with React Class Components. Compatible React >= 16.0.0
 
