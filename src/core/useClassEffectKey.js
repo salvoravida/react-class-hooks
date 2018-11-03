@@ -27,14 +27,15 @@ export const useClassEffectKey = (keySymbol, creator, inputs, onlyDidUpdate = fa
             //inject componentDidMount
             const didMount = typeof self.componentDidMount === 'function' ? self.componentDidMount.bind(self) : undefined;
             self.componentDidMount = () => {
-                self[MAGIC_EFFECTS][keySymbol].cleaner = self[MAGIC_EFFECTS][keySymbol].creator();
                 didMount && didMount();
+                self[MAGIC_EFFECTS][keySymbol].cleaner = self[MAGIC_EFFECTS][keySymbol].creator();
             };
         }
 
         //inject componentDidUpdate
         const didUpdate = typeof self.componentDidUpdate === 'function' ? self.componentDidUpdate.bind(self) : undefined;
         self.componentDidUpdate = (...args) => {
+            didUpdate && didUpdate(...args);
             //execute if no inputs!
             let execute = !self[MAGIC_EFFECTS][keySymbol].inputs;
             //check if input array has values and values changed
@@ -47,14 +48,13 @@ export const useClassEffectKey = (keySymbol, creator, inputs, onlyDidUpdate = fa
                 self[MAGIC_EFFECTS][keySymbol].cleaner && self[MAGIC_EFFECTS][keySymbol].cleaner();
                 self[MAGIC_EFFECTS][keySymbol].cleaner = self[MAGIC_EFFECTS][keySymbol].creator();
             }
-            didUpdate && didUpdate(...args);
         };
 
         //inject componentWillUnmount
         const unmount = typeof self.componentWillUnmount === 'function' ? self.componentWillUnmount.bind(self) : undefined;
         self.componentWillUnmount = () => {
-            self[MAGIC_EFFECTS][keySymbol].cleaner && self[MAGIC_EFFECTS][keySymbol].cleaner();
             unmount && unmount();
+            self[MAGIC_EFFECTS][keySymbol].cleaner && self[MAGIC_EFFECTS][keySymbol].cleaner();
         };
     } else {
         //next renders
