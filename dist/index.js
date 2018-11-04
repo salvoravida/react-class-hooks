@@ -125,7 +125,7 @@ function useClassStateKey(keySymbol, initialValue) {
     //first time Render -> assign initial Value and create Setter
     if (!self[MAGIC_STATES].hasOwnProperty(keySymbol)) {
         self[MAGIC_STATES][keySymbol] = {
-            value: initialValue,
+            value: typeof initialValue === 'function' ? initialValue() : initialValue,
             setValue: function setValue(value) {
                 self[MAGIC_STATES][keySymbol].value = value;
                 if (self.updater.isMounted(self)) self.forceUpdate();
@@ -168,14 +168,15 @@ var useClassEffectKey = function useClassEffectKey(keySymbol, creator, inputs) {
             //inject componentDidMount
             var didMount = typeof self.componentDidMount === 'function' ? self.componentDidMount.bind(self) : undefined;
             self.componentDidMount = function () {
-                self[MAGIC_EFFECTS][keySymbol].cleaner = self[MAGIC_EFFECTS][keySymbol].creator();
                 didMount && didMount();
+                self[MAGIC_EFFECTS][keySymbol].cleaner = self[MAGIC_EFFECTS][keySymbol].creator();
             };
         }
 
         //inject componentDidUpdate
         var didUpdate = typeof self.componentDidUpdate === 'function' ? self.componentDidUpdate.bind(self) : undefined;
         self.componentDidUpdate = function () {
+            didUpdate && didUpdate.apply(undefined, arguments);
             //execute if no inputs!
             var execute = !self[MAGIC_EFFECTS][keySymbol].inputs;
             //check if input array has values and values changed
@@ -188,14 +189,13 @@ var useClassEffectKey = function useClassEffectKey(keySymbol, creator, inputs) {
                 self[MAGIC_EFFECTS][keySymbol].cleaner && self[MAGIC_EFFECTS][keySymbol].cleaner();
                 self[MAGIC_EFFECTS][keySymbol].cleaner = self[MAGIC_EFFECTS][keySymbol].creator();
             }
-            didUpdate && didUpdate.apply(undefined, arguments);
         };
 
         //inject componentWillUnmount
         var unmount = typeof self.componentWillUnmount === 'function' ? self.componentWillUnmount.bind(self) : undefined;
         self.componentWillUnmount = function () {
-            self[MAGIC_EFFECTS][keySymbol].cleaner && self[MAGIC_EFFECTS][keySymbol].cleaner();
             unmount && unmount();
+            self[MAGIC_EFFECTS][keySymbol].cleaner && self[MAGIC_EFFECTS][keySymbol].cleaner();
         };
     } else {
         //next renders

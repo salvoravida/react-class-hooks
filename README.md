@@ -111,11 +111,11 @@ Does it have a performance cost? Of course, injecting @ runtime have always a co
 ## Why Hooks for Class Components?
 * Why not? (of course the useClassState used alone does not make sense in Class Comp. The real advantage is partial state isolation in Custom Hooks) 
 * In future you could have custom Hooks for functional components, but you want to use it in a complex Class Container for any reason.
-* You can play with hooks today in already existing apps, testing them in class components. `react-class-hooks` should be fine with React >= 16.0.0
+* You can play with hooks today in already existing apps, testing them in class components. `react-class-hooks` should be fine with React >= 15.3.2
 * You could use Advanded Class Hooks concepts (see below)
 
 ## Does `react-class-hooks` use under the hoods React official hooks?
-No. It implement useClass*** without React use****. It should supports React >=16.0.0<br/>
+No. It implement useClass*** without React use****. It should supports React >=15.3.2<br/>
 
 ## Api Reference
 Api Reference are the same as official ones, so you can see api reference @ https://reactjs.org/docs/hooks-reference.html
@@ -126,6 +126,7 @@ Currently supported api:
 * useClassEffect -> inject code on didMount+didUpdate+didUnmount
 * useClassMemo -> memoize values 
 * useClassCallback -> memoize dynamic callbacks -> useful on PureComponent when rendering Arrays.
+* useClassReducer -> a Redux-like local state
 
 ## Advanded Class Hooks : Named Hooks
 Hooks are anonymous, so order matters in the "render" method, because there is no other way to differentiate from one call to another in the same render.
