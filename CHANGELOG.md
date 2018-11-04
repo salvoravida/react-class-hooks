@@ -1,3 +1,8 @@
+v. 0.1.6
+-----------
+* fix peerDependencies for React >=15.3.2
+* check typeof useEffect return is a function
+
 v. 0.1.5
 -----
 + support react 15.3.2-15.6.2 (polyfill needed)
