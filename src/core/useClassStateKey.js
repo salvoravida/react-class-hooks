@@ -15,7 +15,7 @@ export function useClassStateKey(keySymbol, initialValue) {
     //first time Render -> assign initial Value and create Setter
     if (!self[MAGIC_STATES].hasOwnProperty(keySymbol)) {
         self[MAGIC_STATES][keySymbol] = {
-            value: initialValue,
+            value: typeof initialValue === 'function' ? initialValue() : initialValue,
             setValue: (value) => {
                 self[MAGIC_STATES][keySymbol].value = value;
                 if (self.updater.isMounted(self)) self.forceUpdate();
