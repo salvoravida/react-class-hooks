@@ -1,6 +1,6 @@
 {
   "name": "react-class-hooks",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "react-class-hooks",
   "main": "dist/index.js",
   "engines": {
@@ -22,7 +22,9 @@
     "react",
     "class",
     "classes",
-    "hooks"
+    "hooks",
+    "react-use",
+    "react-use-class"
   ],
   "author": "Salvatore Ravidà",
   "license": "MIT",
@@ -34,7 +36,7 @@
     "tiny-invariant": "^1.0.2"
   },
   "peerDependencies": {
-    "react": "^16.0.0"
+    "react": ">=15.3.2"
   },
   "devDependencies": {
     "eslint-config-airbnb": "^17.1.0",
