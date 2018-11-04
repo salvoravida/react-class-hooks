@@ -1,7 +1,7 @@
 
 # react-class-hooks [![npm version](https://img.shields.io/npm/v/react-class-hooks.svg?style=flat)](https://www.npmjs.org/package/react-class-hooks) 
 
-Use Custom Hooks with React Class Components. Compatible React >= 16.0.0
+Use Custom Hooks with React Class Components. Support React >= 15.3.2
 
 Installation
 -----------
@@ -12,7 +12,18 @@ Using [npm](https://www.npmjs.com/):
 Or [yarn](https://yarnpkg.com/):
 
     $ yarn add react-class-hooks
-    
+
+React 15.3.2 - 15.6.2 polyfill needed
+----
+For React Versions 15.3.2 to 15.6.2 you have to import import `react-class-hooks/poly15` in your root index.js
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+import 'react-class-hooks/poly15';
+import App from './App';
+
+ReactDOM.render(<App />, document.getElementById('root'));
+```
 Usage
 -----    
 ```javascript
