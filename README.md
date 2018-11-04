@@ -15,7 +15,7 @@ Or [yarn](https://yarnpkg.com/):
 
 React 15.3.2 - 15.6.2 polyfill needed
 ----
-For React Versions 15.3.2 to 15.6.2 you have to import import `react-class-hooks/poly15` in your root index.js
+For React Versions 15.3.2 to 15.6.2 you have to import `react-class-hooks/poly15` in your root index.js
 ```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -37,8 +37,7 @@ class MyComponent extends React.PureComponent {
     }
     componentDidMount (){ /* your already existing business logic here */}
     componentDidUpdate (){ /* your already existing business logic here */}
-    componentUnmount (){ /* your already existing business logic here */}
-        
+    componentUnmount (){ /* your already existing business logic here */} 
     
     render() {
     const { width, height } = useClassWindowSize();
@@ -61,7 +60,7 @@ hooks.js
 ```javascript
 import { useClassState, useClassEffect } from 'react-class-hooks';
 
-export const useClassWindowSize = (options = {}) => {
+export const useClassWindowSize = () => {
     const [size, setSize] = useClassState({
         width: window.innerWidth,
         height: window.innerHeight,
@@ -205,8 +204,8 @@ import { useClassState, useClassEffect } from 'react-class-hooks';
 const useClassWsState= useClassState.create("WindowSize");
 const useClassWsEffect= useClassEffect.create("WindowSize");
 
-const useClassWindowSize = (useState, useEffect, ...argsIfAny) => {
-    const [size, setSize] = useWsState({
+const useClassWindowSize = () => {
+    const [size, setSize] = useClassWsState({
         width: window.innerWidth,
         height: window.innerHeight,
     });
@@ -217,7 +216,7 @@ const useClassWindowSize = (useState, useEffect, ...argsIfAny) => {
         });
     });
     
-    useWsEffect(() => {
+    useClassWsEffect(() => {
         window.addEventListener('resize', handle);
         return () => {
             window.removeEventListener('resize', handle);
