@@ -1,7 +1,7 @@
 
 # react-class-hooks [![npm version](https://img.shields.io/npm/v/react-class-hooks.svg?style=flat)](https://www.npmjs.org/package/react-class-hooks) 
 
-Use Custom Hooks with React Class Components. Support React >= 15.3.2
+Custom Hooks implementation for React Class Components. Support React >= 15.3.2
 
 Installation
 -----------
@@ -42,10 +42,6 @@ class MyComponent extends React.PureComponent {
     render() {
     const { width, height } = useClassWindowSize();
 
-    useClassEffect(() => {
-        document.title = "Window Size : " + width;
-    }, [width]);
-
     return (
         <div>
           <p> windowSize : {width} x {height}</p>
@@ -83,19 +79,16 @@ export const useClassWindowSize = () => {
 
 
 ## Abstract
-As React Hooks goes into the scene, some days ago, my first impression was totally negative.<br/>
+As React Hooks goes into the scene, my first impression was negative.<br/>
 Honestly i think that class matters when you write complex WebApp, but it's up to personal code-style.
 
 Then, this tweet makes me think more about hooks.
 <blockquote class="twitter-tweet" data-lang="it"><p lang="en" dir="ltr">As <a href="https://twitter.com/sophiebits?ref_src=twsrc%5Etfw">@sophiebits</a> noticed it’s interesting that almost all alternative designs people suggest after seeing Hooks are completely incompatible with writing custom Hooks. And custom Hooks are the thing we like most about this model.</p>&mdash; Dan Abramov (@dan_abramov) <a href="https://twitter.com/dan_abramov/status/1055986941739655170?ref_src=twsrc%5Etfw">27 ottobre 2018</a></blockquote>
 
-Since i prefer `this`, the only `real` advantage of using hooks is writing custom ones, when needed.
-
 And here is `react-class-hooks` !
 
 ## What are React Hooks ?
-If you are reading this page, probably you already know them. <br/>
-If not first of all go here -> https://reactjs.org/docs/hooks-intro.html
+Official Intro -> https://reactjs.org/docs/hooks-intro.html
 
 In poor words, with use******** you are injecting @ runtime during render phase a
 *piece of {state, didMount, didUpdate, unMount}* just in one line of code,
@@ -113,7 +106,7 @@ Does it have a performance cost? Of course, injecting @ runtime have always a co
 * You can play with hooks today in already existing apps, testing them in class components. `react-class-hooks` should be fine with React >= 15.3.2
 * You could use Advanded Class Hooks concepts (see below)
 
-## Does `react-class-hooks` use under the hoods React official hooks?
+## Does `react-class-hooks` use under the hood React official hooks?
 No. It implement useClass*** without React use****. It should supports React >=15.3.2<br/>
 
 ## Api Reference
