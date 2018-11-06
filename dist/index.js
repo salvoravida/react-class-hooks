@@ -140,6 +140,22 @@ function useClassStateKey(keySymbol, initialValue) {
     return [value, setValue];
 }
 
+function inputsArrayEqual(inputs, prevInputs) {
+    invariant(inputs.length === prevInputs.length, 'Hooks inputs array length should be constant between renders!');
+
+    //Object.is polyfill
+    for (var i = 0; i < inputs.length; i += 1) {
+        var val1 = inputs[i];
+        var val2 = prevInputs[i];
+
+        if (!(val1 === val2 && (val1 !== 0 || 1 / val1 === 1 / val2) || val1 !== val1 && val2 !== val2)) {
+            // eslint-disable-line
+            return false;
+        }
+    }
+    return true;
+}
+
 /**
  *  https://github.com/salvoravida/react-class-hooks
  */
@@ -170,6 +186,7 @@ var useClassEffectKey = function useClassEffectKey(keySymbol, creator, inputs) {
             self.componentDidMount = function () {
                 if (didMount) didMount();
                 self[MAGIC_EFFECTS][keySymbol].cleaner = self[MAGIC_EFFECTS][keySymbol].creator();
+                invariant(!self[MAGIC_EFFECTS][keySymbol].cleaner || typeof self[MAGIC_EFFECTS][keySymbol].cleaner === 'function', 'useClassEffect return (Effect Cleaner) should be Function or Void !');
             };
         }
 
@@ -177,17 +194,14 @@ var useClassEffectKey = function useClassEffectKey(keySymbol, creator, inputs) {
         var didUpdate = typeof self.componentDidUpdate === 'function' ? self.componentDidUpdate.bind(self) : undefined;
         self.componentDidUpdate = function () {
             if (didUpdate) didUpdate.apply(undefined, arguments);
-            //execute if no inputs!
-            var execute = !self[MAGIC_EFFECTS][keySymbol].inputs;
-            //check if input array has values and values changed
-            if (!execute) {
-                self[MAGIC_EFFECTS][keySymbol].inputs.forEach(function (input, index) {
-                    execute = execute || self[MAGIC_EFFECTS][keySymbol].prevInputs[index] !== input;
-                });
-            }
+
+            //execute if no inputs || inputs array has values and values changed
+            var execute = !self[MAGIC_EFFECTS][keySymbol].inputs || !inputsArrayEqual(self[MAGIC_EFFECTS][keySymbol].inputs, self[MAGIC_EFFECTS][keySymbol].prevInputs);
+
             if (execute) {
                 if (typeof self[MAGIC_EFFECTS][keySymbol].cleaner === 'function') self[MAGIC_EFFECTS][keySymbol].cleaner();
                 self[MAGIC_EFFECTS][keySymbol].cleaner = self[MAGIC_EFFECTS][keySymbol].creator();
+                invariant(!self[MAGIC_EFFECTS][keySymbol].cleaner || typeof self[MAGIC_EFFECTS][keySymbol].cleaner === 'function', 'useClassEffect return (Effect Cleaner) should be Function or Void !');
             }
         };
 
@@ -342,9 +356,7 @@ var useClassMemoKey = function useClassMemoKey(keySymbol, creator, inputs) {
                 execute = true;
             }
         } else {
-            inputs.forEach(function (input, index) {
-                execute = execute || self[MAGIC_MEMOS][keySymbol].inputs[index] !== input;
-            });
+            execute = !inputsArrayEqual(inputs, self[MAGIC_MEMOS][keySymbol].inputs);
         }
         if (execute) {
             self[MAGIC_MEMOS][keySymbol] = {
@@ -364,6 +376,10 @@ useClassMemo.create = function (name) {
     return createNamedHook(name, useClassMemoKey);
 };
 
+useClassMemo.createStack = function (stackName) {
+    return createHook(stackName, useClassMemoKey);
+};
+
 /**
  *  https://github.com/salvoravida/react-class-hooks
  */
@@ -375,6 +391,14 @@ function useClassCallbackKey(keySymbol, callback, inputs) {
 }
 
 var useClassCallback = createHook('Callbacks', useClassCallbackKey);
+
+useClassCallback.create = function (name) {
+  return createNamedHook(name, useClassCallbackKey);
+};
+
+useClassCallback.createStack = function (stackName) {
+  return createHook(stackName, useClassCallbackKey);
+};
 
 /**
  *  https://github.com/salvoravida/react-class-hooks
