@@ -107,6 +107,27 @@ Does it have a performance cost? Of course, injecting @ runtime have always a co
 * useClassMemo & useClassCallback make PureComponents 100% pure! (max performance!)
 * You could use Advanded Class Hooks concepts (see below)
 
+## Use Case : Make PureComponent 100% Pure
+```javascript
+import { useClassCallback } from 'react-class-hooks';
+
+const myMemoCallback = useClassCallback.createStack('myMemoCallback');
+
+class MyComponent extends React.PureComponent {
+  render (){
+    //....
+  }
+}
+
+class Container extends React.PureComponent {
+  render (){
+    {this.props.arrayProp.map(el=>
+      <MyComponent key={el.id} onClick={myMemoCallback( ()=> someAction(el.id) , [el.id])} /> 
+    )}
+  }
+}
+```
+
 ## Does `react-class-hooks` use under the hood React official hooks?
 No. It implement useClass*** without React use****. It should supports React >=15.3.2<br/>
 
