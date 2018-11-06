@@ -1,7 +1,7 @@
 
 # react-class-hooks [![npm version](https://img.shields.io/npm/v/react-class-hooks.svg?style=flat)](https://www.npmjs.org/package/react-class-hooks) 
 
-Custom Hooks implementation for React Class Components. Support React >= 15.3.2
+React Hooks implementation for Class Components. Support React >= 15.3.2
 
 Installation
 -----------
