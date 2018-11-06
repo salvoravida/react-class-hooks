@@ -104,6 +104,7 @@ Does it have a performance cost? Of course, injecting @ runtime have always a co
 * Why not? (of course the useClassState used alone does not make sense in Class Comp. The real advantage is partial state isolation in Custom Hooks) 
 * In future you could have custom Hooks for functional components, but you want to use it in a complex Class Container for any reason.
 * You can play with hooks today in already existing apps, testing them in class components. `react-class-hooks` should be fine with React >= 15.3.2
+* useClassMemo & useClassCallback make PureComponents 100% pure! (max performance!)
 * You could use Advanded Class Hooks concepts (see below)
 
 ## Does `react-class-hooks` use under the hood React official hooks?
