@@ -1,4 +1,5 @@
 v. 0.1.8
+-----------
 * inputsArrayEqual check on effect inputs
 * invariant for useClassEffect return 
 * added useClassCallback.createStack
