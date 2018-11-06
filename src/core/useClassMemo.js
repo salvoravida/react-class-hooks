@@ -4,6 +4,7 @@
 
 import invariant from 'tiny-invariant';
 import { checkSymbol, getMagicSelf, MAGIC_MEMOS } from './magicSelf';
+import { inputsArrayEqual } from './inputsEqual';
 import { createHook, createNamedHook } from './createHook';
 
 export const useClassMemoKey = (keySymbol, creator, inputs) => {
@@ -31,9 +32,7 @@ export const useClassMemoKey = (keySymbol, creator, inputs) => {
                 execute = true;
             }
         } else {
-            inputs.forEach((input, index) => {
-                execute = execute || self[MAGIC_MEMOS][keySymbol].inputs[index] !== input;
-            });
+            execute = !inputsArrayEqual(inputs, self[MAGIC_MEMOS][keySymbol].inputs);
         }
         if (execute) {
             self[MAGIC_MEMOS][keySymbol] = {
@@ -50,3 +49,5 @@ export const useClassMemoKey = (keySymbol, creator, inputs) => {
 export const useClassMemo = createHook('Memos', useClassMemoKey);
 
 useClassMemo.create = name => createNamedHook(name, useClassMemoKey);
+
+useClassMemo.createStack = stackName => createHook(stackName, useClassMemoKey);

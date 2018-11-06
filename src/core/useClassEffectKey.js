@@ -4,6 +4,7 @@
 
 import invariant from 'tiny-invariant';
 import { checkSymbol, getMagicSelf, MAGIC_EFFECTS } from './magicSelf';
+import { inputsArrayEqual } from './inputsEqual';
 
 export const useClassEffectKey = (keySymbol, creator, inputs, onlyDidUpdate = false) => {
     checkSymbol('useClassEffect', keySymbol);
@@ -29,6 +30,8 @@ export const useClassEffectKey = (keySymbol, creator, inputs, onlyDidUpdate = fa
             self.componentDidMount = () => {
                 if (didMount) didMount();
                 self[MAGIC_EFFECTS][keySymbol].cleaner = self[MAGIC_EFFECTS][keySymbol].creator();
+                invariant(!self[MAGIC_EFFECTS][keySymbol].cleaner || typeof self[MAGIC_EFFECTS][keySymbol].cleaner === 'function',
+                    'useClassEffect return (Effect Cleaner) should be Function or Void !');
             };
         }
 
@@ -36,17 +39,16 @@ export const useClassEffectKey = (keySymbol, creator, inputs, onlyDidUpdate = fa
         const didUpdate = typeof self.componentDidUpdate === 'function' ? self.componentDidUpdate.bind(self) : undefined;
         self.componentDidUpdate = (...args) => {
             if (didUpdate) didUpdate(...args);
-            //execute if no inputs!
-            let execute = !self[MAGIC_EFFECTS][keySymbol].inputs;
-            //check if input array has values and values changed
-            if (!execute) {
-                self[MAGIC_EFFECTS][keySymbol].inputs.forEach((input, index) => {
-                    execute = execute || self[MAGIC_EFFECTS][keySymbol].prevInputs[index] !== input;
-                });
-            }
+
+            //execute if no inputs || inputs array has values and values changed
+            const execute = !self[MAGIC_EFFECTS][keySymbol].inputs
+                || !inputsArrayEqual(self[MAGIC_EFFECTS][keySymbol].inputs, self[MAGIC_EFFECTS][keySymbol].prevInputs);
+
             if (execute) {
                 if (typeof self[MAGIC_EFFECTS][keySymbol].cleaner === 'function') self[MAGIC_EFFECTS][keySymbol].cleaner();
                 self[MAGIC_EFFECTS][keySymbol].cleaner = self[MAGIC_EFFECTS][keySymbol].creator();
+                invariant(!self[MAGIC_EFFECTS][keySymbol].cleaner || typeof self[MAGIC_EFFECTS][keySymbol].cleaner === 'function',
+                    'useClassEffect return (Effect Cleaner) should be Function or Void !');
             }
         };
 
