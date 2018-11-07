@@ -2,7 +2,7 @@
  *  https://github.com/salvoravida/react-class-hooks
  */
 
-import { useClassStateKey } from './useClassStateKey';
+import { useClassRefKey } from './useClassRef';
 import { useClassEffectKey, useClassEffectExist } from './useClassEffectKey';
 
 export function MagicStack(StackName) {
@@ -22,21 +22,18 @@ export function MagicStack(StackName) {
 }
 
 export function useMagicStack(magicStack, hook, [...args]) {
-    //no setter - just clean stack not re-render!!
-    const [stack] = useClassStateKey(magicStack.symbol, {
-        counter: 0,
-    });
+    const stack = useClassRefKey(magicStack.symbol, 0);
 
     //optimization after first call in the same rendering phase
     if (!useClassEffectExist(magicStack.cleanSymbol)) {
         //clean stack after render
         useClassEffectKey(magicStack.cleanSymbol, () => {
-            stack.counter = 0;
+            stack.current = 0;
         });
     }
 
     //update stack counter
-    stack.counter += 1;
+    stack.current += 1;
 
-    return hook(magicStack.getKey(stack.counter), ...args);
+    return hook(magicStack.getKey(stack.current), ...args);
 }
