@@ -17,7 +17,9 @@ export function useClassStateKey(keySymbol, initialValue) {
         self[MAGIC_STATES][keySymbol] = {
             value: typeof initialValue === 'function' ? initialValue() : initialValue,
             setValue: (value) => {
-                self[MAGIC_STATES][keySymbol].value = value;
+                self[MAGIC_STATES][keySymbol].value = typeof value === 'function'
+                    ? value(self[MAGIC_STATES][keySymbol].value) : value;
+                //check if mounted yet
                 if (self.updater.isMounted(self)) self.forceUpdate();
             },
         };
