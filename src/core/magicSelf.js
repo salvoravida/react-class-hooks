@@ -16,6 +16,7 @@ invariant(typeof Symbol === 'function' && Symbol.for, 'react-class-hooks needs S
 export const MAGIC_STATES = Symbol.for('magicStates');
 export const MAGIC_EFFECTS = Symbol.for('magicEffects');
 export const MAGIC_MEMOS = Symbol.for('magicMemos');
+export const MAGIC_REFS = Symbol.for('magicRefs');
 
 //React 15.3.2 support + Polyfill
 const instanceKey = React.version.indexOf('16') === 0 ? 'stateNode' : '_instance';

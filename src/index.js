@@ -7,3 +7,4 @@ export { useClassEffect } from './core/useClassEffect';
 export { useClassMemo } from './core/useClassMemo';
 export { useClassCallback } from './core/useClassCallback';
 export { useClassReducer } from './core/useClassReducer';
+export { useClassRef, refCallback } from './core/useClassRef';
