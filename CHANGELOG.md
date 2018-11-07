@@ -1,3 +1,9 @@
+v. 0.1.9
+-----------
+* added useClassRef (and refCallback for React15 support)
+* added setState() accept update func (prevState)=> nextState 
+* internal useClassRef for optimization
+
 v. 0.1.8
 -----------
 * inputsArrayEqual check on effect inputs

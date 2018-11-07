@@ -141,6 +141,7 @@ Currently supported api:
 * useClassMemo -> memoize values 
 * useClassCallback -> memoize dynamic callbacks -> useful on PureComponent when rendering Arrays.
 * useClassReducer -> a Redux-like local state
+* useClassRef -> a mutable ref object with .current 
 
 ## Advanded Class Hooks : Named Hooks
 Hooks are anonymous, so order matters in the "render" method, because there is no other way to differentiate from one call to another in the same render.

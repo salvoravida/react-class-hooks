@@ -93,6 +93,7 @@ invariant(typeof Symbol === 'function' && Symbol.for, 'react-class-hooks needs S
 var MAGIC_STATES = Symbol.for('magicStates');
 var MAGIC_EFFECTS = Symbol.for('magicEffects');
 var MAGIC_MEMOS = Symbol.for('magicMemos');
+var MAGIC_REFS = Symbol.for('magicRefs');
 
 //React 15.3.2 support + Polyfill
 var instanceKey = React.version.indexOf('16') === 0 ? 'stateNode' : '_instance';
@@ -114,31 +115,40 @@ function checkSymbol(name, keySymbol) {
  *  https://github.com/salvoravida/react-class-hooks
  */
 
-function useClassStateKey(keySymbol, initialValue) {
-    checkSymbol('useClassStateKey', keySymbol);
+function useClassRefKey(keySymbol, initialValue) {
+    checkSymbol('useClassRefKey', keySymbol);
 
     var self = getMagicSelf();
 
     //first time Render && first Hook
-    if (!self[MAGIC_STATES]) self[MAGIC_STATES] = {};
+    if (!self[MAGIC_REFS]) self[MAGIC_REFS] = {};
 
-    //first time Render -> assign initial Value and create Setter
-    if (!self[MAGIC_STATES].hasOwnProperty(keySymbol)) {
-        self[MAGIC_STATES][keySymbol] = {
-            value: typeof initialValue === 'function' ? initialValue() : initialValue,
-            setValue: function setValue(value) {
-                self[MAGIC_STATES][keySymbol].value = value;
-                if (self.updater.isMounted(self)) self.forceUpdate();
-            }
-        };
+    //first time Render -> assign initial Value
+    if (!self[MAGIC_REFS].hasOwnProperty(keySymbol)) {
+        var ref = { current: initialValue };
+        Object.seal(ref);
+        self[MAGIC_REFS][keySymbol] = ref;
     }
 
-    var _self$MAGIC_STATES$ke = self[MAGIC_STATES][keySymbol],
-        value = _self$MAGIC_STATES$ke.value,
-        setValue = _self$MAGIC_STATES$ke.setValue;
-
-    return [value, setValue];
+    return self[MAGIC_REFS][keySymbol];
 }
+
+var useClassRef = createHook('Refs', useClassRefKey);
+
+useClassRef.create = function (name) {
+    return createNamedHook(name, useClassRefKey);
+};
+
+useClassRef.createStack = function (stackName) {
+    return createHook(stackName, useClassRefKey);
+};
+
+//poly 15 ref
+var refCallback = function refCallback(refObject) {
+    return function (ref) {
+        refObject.current = ref;
+    };
+};
 
 function inputsArrayEqual(inputs, prevInputs) {
     invariant(inputs.length === prevInputs.length, 'Hooks inputs array length should be constant between renders!');
@@ -255,27 +265,20 @@ function useMagicStack(magicStack, hook, _ref) {
     var _ref2 = toArray(_ref),
         args = _ref2.slice(0);
 
-    //no setter - just clean stack not re-render!!
-    var _useClassStateKey = useClassStateKey(magicStack.symbol, {
-        counter: 0
-    }),
-        _useClassStateKey2 = slicedToArray(_useClassStateKey, 1),
-        stack = _useClassStateKey2[0];
+    var stack = useClassRefKey(magicStack.symbol, 0);
 
     //optimization after first call in the same rendering phase
-
-
     if (!useClassEffectExist(magicStack.cleanSymbol)) {
         //clean stack after render
         useClassEffectKey(magicStack.cleanSymbol, function () {
-            stack.counter = 0;
+            stack.current = 0;
         });
     }
 
     //update stack counter
-    stack.counter += 1;
+    stack.current += 1;
 
-    return hook.apply(undefined, [magicStack.getKey(stack.counter)].concat(toConsumableArray(args)));
+    return hook.apply(undefined, [magicStack.getKey(stack.current)].concat(toConsumableArray(args)));
 }
 
 /**
@@ -297,6 +300,37 @@ function createHook(stackName, hook) {
 function createNamedHook(name, hook) {
     var keySymbol = Symbol(name);
     return hook.bind(null, keySymbol);
+}
+
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
+
+function useClassStateKey(keySymbol, initialValue) {
+    checkSymbol('useClassStateKey', keySymbol);
+
+    var self = getMagicSelf();
+
+    //first time Render && first Hook
+    if (!self[MAGIC_STATES]) self[MAGIC_STATES] = {};
+
+    //first time Render -> assign initial Value and create Setter
+    if (!self[MAGIC_STATES].hasOwnProperty(keySymbol)) {
+        self[MAGIC_STATES][keySymbol] = {
+            value: typeof initialValue === 'function' ? initialValue() : initialValue,
+            setValue: function setValue(value) {
+                self[MAGIC_STATES][keySymbol].value = typeof value === 'function' ? value(self[MAGIC_STATES][keySymbol].value) : value;
+                //check if mounted yet
+                if (self.updater.isMounted(self)) self.forceUpdate();
+            }
+        };
+    }
+
+    var _self$MAGIC_STATES$ke = self[MAGIC_STATES][keySymbol],
+        value = _self$MAGIC_STATES$ke.value,
+        setValue = _self$MAGIC_STATES$ke.setValue;
+
+    return [value, setValue];
 }
 
 /**
@@ -433,3 +467,5 @@ exports.useClassEffect = useClassEffect;
 exports.useClassMemo = useClassMemo;
 exports.useClassCallback = useClassCallback;
 exports.useClassReducer = useClassReducer;
+exports.useClassRef = useClassRef;
+exports.refCallback = refCallback;
