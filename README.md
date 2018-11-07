@@ -111,7 +111,8 @@ Does it have a performance cost? Of course, injecting @ runtime have always a co
 ```javascript
 import { useClassCallback } from 'react-class-hooks';
 
-const myMemoCallback = useClassCallback.createStack('myMemoCallback');
+//named stack hooks -> see below (isolated named stack - no order rules drawbacks)
+const myComponentCallback = useClassCallback.createStack('myComponentCallback');
 
 class MyComponent extends React.PureComponent {
   render (){
@@ -122,7 +123,7 @@ class MyComponent extends React.PureComponent {
 class Container extends React.PureComponent {
   render (){
     {this.props.arrayProp.map(el=>
-      <MyComponent key={el.id} onClick={myMemoCallback( ()=> someAction(el.id) , [el.id])} /> 
+      <MyComponent key={el.id} onClick={myComponentCallback( ()=> someAction(el.id) , [el.id])} /> 
     )}
   }
 }
