@@ -1,6 +1,7 @@
 v. 0.2.0
 -----------
 * setState support callback => setState(value,callback);
+* fix circular dep.
 
 v. 0.1.9
 -----------

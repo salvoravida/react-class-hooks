@@ -133,23 +133,6 @@ function useClassRefKey(keySymbol, initialValue) {
     return self[MAGIC_REFS][keySymbol];
 }
 
-var useClassRef = createHook('Refs', useClassRefKey);
-
-useClassRef.create = function (name) {
-    return createNamedHook(name, useClassRefKey);
-};
-
-useClassRef.createStack = function (stackName) {
-    return createHook(stackName, useClassRefKey);
-};
-
-//poly 15 ref
-var refCallback = function refCallback(refObject) {
-    return function (ref) {
-        refObject.current = ref;
-    };
-};
-
 function inputsArrayEqual(inputs, prevInputs) {
     invariant(inputs.length === prevInputs.length, 'Hooks inputs array length should be constant between renders!');
 
@@ -457,6 +440,27 @@ var useClassReducer = createHook('Reducers', useClassReducerKey);
 
 useClassReducer.create = function (name) {
     return createNamedHook(name, useClassReducerKey);
+};
+
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
+
+var useClassRef = createHook('Refs', useClassRefKey);
+
+useClassRef.create = function (name) {
+  return createNamedHook(name, useClassRefKey);
+};
+
+useClassRef.createStack = function (stackName) {
+  return createHook(stackName, useClassRefKey);
+};
+
+//poly 15 ref
+var refCallback = function refCallback(refObject) {
+  return function (ref) {
+    refObject.current = ref;
+  };
 };
 
 /**

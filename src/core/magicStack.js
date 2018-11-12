@@ -2,7 +2,7 @@
  *  https://github.com/salvoravida/react-class-hooks
  */
 
-import { useClassRefKey } from './useClassRef';
+import { useClassRefKey } from './useClassRefKey';
 import { useClassEffectKey, useClassEffectExist } from './useClassEffectKey';
 
 export function MagicStack(StackName) {
