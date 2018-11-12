@@ -1,3 +1,7 @@
+v. 0.2.0
+-----------
+* setState support callback => setState(value,callback);
+
 v. 0.1.9
 -----------
 * added useClassRef (and refCallback for React15 support)

@@ -318,10 +318,11 @@ function useClassStateKey(keySymbol, initialValue) {
     if (!self[MAGIC_STATES].hasOwnProperty(keySymbol)) {
         self[MAGIC_STATES][keySymbol] = {
             value: typeof initialValue === 'function' ? initialValue() : initialValue,
-            setValue: function setValue(value) {
+            setValue: function setValue(value, callback) {
                 self[MAGIC_STATES][keySymbol].value = typeof value === 'function' ? value(self[MAGIC_STATES][keySymbol].value) : value;
                 //check if mounted yet
-                if (self.updater.isMounted(self)) self.forceUpdate();
+                invariant(!callback || typeof callback === 'function', 'setState callback must be a function!');
+                if (self.updater.isMounted(self)) self.forceUpdate(callback);
             }
         };
     }
