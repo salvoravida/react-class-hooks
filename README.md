@@ -3,6 +3,10 @@
 
 React Hooks implementation for Class Components. Support React >= 15.3.2
 
+#react-universal-hooks
+Recommended way to use Class Hooks 
+https://github.com/salvoravida/react-universal-hooks
+
 Installation
 -----------
 Using [npm](https://www.npmjs.com/):
@@ -264,7 +268,7 @@ class App extends React.PureComponent {
 ```
 
 ## How can i create Universal Custom Hooks in future?
-
+UPDATE 2019.03.04 -> https://github.com/salvoravida/react-universal-hooks
 ```javascript
 import { useState, useEffect } from 'react';
 import { useClassState, useClassEffect } from 'react-class-hooks';
