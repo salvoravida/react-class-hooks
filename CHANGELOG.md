@@ -1,3 +1,7 @@
+v. 0.3.1
+-----------
+*  fix export useClassContext
+
 v. 0.3.0
 -----------
 * added useClassContext
