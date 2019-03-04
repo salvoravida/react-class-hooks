@@ -3,8 +3,10 @@
 
 React Hooks implementation for Class Components. Support React >= 15.3.2
 
-#react-universal-hooks
+react-universal-hooks
+---
 Recommended way to use Class Hooks 
+
 https://github.com/salvoravida/react-universal-hooks
 
 Installation
