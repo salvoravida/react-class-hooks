@@ -32,6 +32,10 @@ export function getMagicSelf() {
     return React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current[instanceKey];
 }
 
+export function getMagicFiber() {
+    return React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current;
+}
+
 export function checkSymbol(name, keySymbol) {
     invariant(typeof keySymbol === 'symbol', `${name} - Expected a Symbol for key!`);
 }

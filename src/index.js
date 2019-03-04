@@ -2,9 +2,22 @@
  *  https://github.com/salvoravida/react-class-hooks
  */
 
-export { useClassState } from './core/useClassState';
-export { useClassEffect } from './core/useClassEffect';
-export { useClassMemo } from './core/useClassMemo';
-export { useClassCallback } from './core/useClassCallback';
-export { useClassReducer } from './core/useClassReducer';
-export { useClassRef, refCallback } from './core/useClassRef';
+import { useClassState } from './core/useClassState';
+import { useClassEffect } from './core/useClassEffect';
+import { useClassMemo } from './core/useClassMemo';
+import { useClassCallback } from './core/useClassCallback';
+import { useClassReducer } from './core/useClassReducer';
+import { useClassRef, refCallback } from './core/useClassRef';
+
+const useClassLayoutEffect = useClassEffect;
+
+export {
+    useClassState,
+    useClassEffect,
+    useClassLayoutEffect,
+    useClassMemo,
+    useClassCallback,
+    useClassReducer,
+    useClassRef,
+    refCallback,
+};
