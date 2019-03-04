@@ -467,8 +467,11 @@ var refCallback = function refCallback(refObject) {
  *  https://github.com/salvoravida/react-class-hooks
  */
 
+var useClassLayoutEffect = useClassEffect;
+
 exports.useClassState = useClassState;
 exports.useClassEffect = useClassEffect;
+exports.useClassLayoutEffect = useClassLayoutEffect;
 exports.useClassMemo = useClassMemo;
 exports.useClassCallback = useClassCallback;
 exports.useClassReducer = useClassReducer;
