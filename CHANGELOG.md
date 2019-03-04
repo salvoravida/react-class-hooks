@@ -1,3 +1,8 @@
+v. 0.3.0
+-----------
+* added useClassContext
+* added useClassLayoutEffect alias
+
 v. 0.2.0
 -----------
 * setState support callback => setState(value,callback);
