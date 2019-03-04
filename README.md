@@ -1,13 +1,13 @@
 
+# react-universal-hooks
+---
+UPDATE 2019.03.04 -> Recommended way to use Class Hooks 
+
+https://github.com/salvoravida/react-universal-hooks
+
 # react-class-hooks [![npm version](https://img.shields.io/npm/v/react-class-hooks.svg?style=flat)](https://www.npmjs.org/package/react-class-hooks) 
 
 React Hooks implementation for Class Components. Support React >= 15.3.2
-
-react-universal-hooks
----
-Recommended way to use Class Hooks 
-
-https://github.com/salvoravida/react-universal-hooks
 
 Installation
 -----------
