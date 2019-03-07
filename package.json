@@ -1,6 +1,6 @@
 {
   "name": "react-class-hooks",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "react-class-hooks",
   "main": "dist/index.js",
   "module": "src/index.js",
