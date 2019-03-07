@@ -1,3 +1,7 @@
+v. 0.3.2
+-----------
+*  useClassContext use ReactInternals readContext
+
 v. 0.3.1
 -----------
 *  fix export useClassContext
