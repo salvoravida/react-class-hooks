@@ -1,9 +1,8 @@
 {
   "name": "react-class-hooks",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "react-class-hooks",
   "main": "dist/index.js",
-  "module": "src/index.js",
   "engines": {
     "node": ">=8",
     "npm": ">=5"
