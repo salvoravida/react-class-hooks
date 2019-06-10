@@ -1,3 +1,11 @@
+v. 0.3.4
+-----------
+*  upgrade to babel7
+
+v. 0.3.3
+-----------
+*  removed module on package.json
+
 v. 0.3.2
 -----------
 *  useClassContext use ReactInternals readContext
