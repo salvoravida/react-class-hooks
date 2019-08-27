@@ -13,6 +13,14 @@ export default [{
                 react: 'React',
             },
         },
+        {
+            file: 'dist/index.esm.js',
+            format: 'esm',
+            sourcemap: false,
+            globals: {
+                react: 'React',
+            },
+        },
     ],
     plugins: [
         resolve(),

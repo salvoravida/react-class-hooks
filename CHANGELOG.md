@@ -1,3 +1,8 @@
+v. 0.3.6
+-----------
+*  add ESM build
+*  dev update babel - rollup - eslint
+
 v. 0.3.4
 -----------
 *  upgrade to babel7
