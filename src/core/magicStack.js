@@ -21,7 +21,7 @@ export function MagicStack(StackName) {
     };
 }
 
-export function useMagicStack(magicStack, hook, [...args]) {
+export function useMagicStack(magicStack, hook, ...args) {
     const stack = useClassRefKey(magicStack.symbol, 0);
 
     //optimization after first call in the same rendering phase

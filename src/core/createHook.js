@@ -8,7 +8,7 @@ export function createHook(stackName, hook) {
     const stack = new MagicStack(stackName);
     return (...args) => {
         if (args && args.length && typeof args[0] === 'symbol') return hook(...args);
-        return useMagicStack(stack, hook, [...args]);
+        return useMagicStack(stack, hook, ...args);
     };
 }
 

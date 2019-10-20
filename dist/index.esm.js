@@ -14,38 +14,6 @@ function _typeof(obj) {
   return _typeof(obj);
 }
 
-function _toArray(arr) {
-  return _arrayWithHoles(arr) || _iterableToArray(arr) || _nonIterableRest();
-}
-
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  }
-}
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-function _iterableToArray(iter) {
-  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance");
-}
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance");
-}
-
 var isProduction = process.env.NODE_ENV === 'production';
 var prefix = 'Invariant failed';
 
@@ -194,6 +162,9 @@ function useClassEffectExist(keySymbol) {
   return !!self[MAGIC_EFFECTS] && !!self[MAGIC_EFFECTS].hasOwnProperty(keySymbol);
 }
 
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
 function MagicStack(StackName) {
   var _this = this;
 
@@ -214,10 +185,7 @@ function MagicStack(StackName) {
     return _this.keys[stackIndex - 1];
   };
 }
-function useMagicStack(magicStack, hook, _ref) {
-  var _ref2 = _toArray(_ref),
-      args = _ref2.slice(0);
-
+function useMagicStack(magicStack, hook) {
   var stack = useClassRefKey(magicStack.symbol, 0); //optimization after first call in the same rendering phase
 
   if (!useClassEffectExist(magicStack.cleanSymbol)) {
@@ -229,7 +197,12 @@ function useMagicStack(magicStack, hook, _ref) {
 
 
   stack.current += 1;
-  return hook.apply(void 0, [magicStack.getKey(stack.current)].concat(_toConsumableArray(args)));
+
+  for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    args[_key - 2] = arguments[_key];
+  }
+
+  return hook.apply(void 0, [magicStack.getKey(stack.current)].concat(args));
 }
 
 function createHook(stackName, hook) {
@@ -240,7 +213,7 @@ function createHook(stackName, hook) {
     }
 
     if (args && args.length && _typeof(args[0]) === 'symbol') return hook.apply(void 0, args);
-    return useMagicStack(stack, hook, [].concat(args));
+    return useMagicStack.apply(void 0, [stack, hook].concat(args));
   };
 }
 function createNamedHook(name, hook) {
