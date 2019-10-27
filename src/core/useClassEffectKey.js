@@ -30,6 +30,8 @@ export const useClassEffectKey = (keySymbol, creator, inputs, onlyDidUpdate = fa
             self.componentDidMount = () => {
                 if (didMount) didMount();
                 self[MAGIC_EFFECTS][keySymbol].cleaner = self[MAGIC_EFFECTS][keySymbol].creator();
+                //save last executed inputs
+                self[MAGIC_EFFECTS][keySymbol].prevInputs = self[MAGIC_EFFECTS][keySymbol].inputs;
                 invariant(!self[MAGIC_EFFECTS][keySymbol].cleaner || typeof self[MAGIC_EFFECTS][keySymbol].cleaner === 'function',
                     'useClassEffect return (Effect Cleaner) should be Function or Void !');
             };
@@ -47,6 +49,8 @@ export const useClassEffectKey = (keySymbol, creator, inputs, onlyDidUpdate = fa
             if (execute) {
                 if (typeof self[MAGIC_EFFECTS][keySymbol].cleaner === 'function') self[MAGIC_EFFECTS][keySymbol].cleaner();
                 self[MAGIC_EFFECTS][keySymbol].cleaner = self[MAGIC_EFFECTS][keySymbol].creator();
+                //save last executed inputs!
+                self[MAGIC_EFFECTS][keySymbol].prevInputs = self[MAGIC_EFFECTS][keySymbol].inputs;
                 invariant(!self[MAGIC_EFFECTS][keySymbol].cleaner || typeof self[MAGIC_EFFECTS][keySymbol].cleaner === 'function',
                     'useClassEffect return (Effect Cleaner) should be Function or Void !');
             }
@@ -60,12 +64,8 @@ export const useClassEffectKey = (keySymbol, creator, inputs, onlyDidUpdate = fa
         };
     } else {
         //next renders
-        self[MAGIC_EFFECTS][keySymbol] = {
-            prevInputs: self[MAGIC_EFFECTS][keySymbol].inputs,
-            cleaner: self[MAGIC_EFFECTS][keySymbol].cleaner,
-            creator,
-            inputs,
-        };
+        self[MAGIC_EFFECTS][keySymbol].creator = creator;
+        self[MAGIC_EFFECTS][keySymbol].inputs = inputs;
     }
 };
 
