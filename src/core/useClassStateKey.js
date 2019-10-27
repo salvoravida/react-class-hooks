@@ -1,8 +1,6 @@
 /**
  *  https://github.com/salvoravida/react-class-hooks
  */
-
-import invariant from 'tiny-invariant';
 import { getMagicSelf, checkSymbol, MAGIC_STATES } from './magicSelf';
 
 export function useClassStateKey(keySymbol, initialValue) {
@@ -18,11 +16,13 @@ export function useClassStateKey(keySymbol, initialValue) {
         self[MAGIC_STATES][keySymbol] = {
             value: typeof initialValue === 'function' ? initialValue() : initialValue,
             setValue: (value, callback) => {
-                self[MAGIC_STATES][keySymbol].value = typeof value === 'function'
-                    ? value(self[MAGIC_STATES][keySymbol].value) : value;
-                //check if mounted yet
-                invariant(!callback || typeof callback === 'function', 'setState callback must be a function!');
-                if (self.updater.isMounted(self)) self.forceUpdate(callback);
+                const newState = typeof value === 'function' ? value(self[MAGIC_STATES][keySymbol].value) : value;
+                if (self[MAGIC_STATES][keySymbol].value !== newState) {
+                    self[MAGIC_STATES][keySymbol].value = newState;
+                    if (self.updater.isMounted(self)) {
+                        self.updater.enqueueForceUpdate(self, callback);
+                    }
+                }
             },
         };
     }
