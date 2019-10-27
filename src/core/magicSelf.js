@@ -17,6 +17,7 @@ export const MAGIC_STATES = Symbol.for('magicStates');
 export const MAGIC_EFFECTS = Symbol.for('magicEffects');
 export const MAGIC_MEMOS = Symbol.for('magicMemos');
 export const MAGIC_REFS = Symbol.for('magicRefs');
+export const MAGIC_STACKS = Symbol.for('magicStacks');
 
 //React 15.3.2 support + Polyfill
 const instanceKey = React.version.indexOf('16') === 0 ? 'stateNode' : '_instance';

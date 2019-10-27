@@ -2,8 +2,7 @@
  *  https://github.com/salvoravida/react-class-hooks
  */
 
-import { useClassRefKey } from './useClassRefKey';
-import { useClassEffectKey, useClassEffectExist } from './useClassEffectKey';
+import { getMagicSelf, MAGIC_STACKS } from './magicSelf';
 
 export function MagicStack(StackName) {
     this.name = StackName;
@@ -22,18 +21,26 @@ export function MagicStack(StackName) {
 }
 
 export function useMagicStack(magicStack, hook, ...args) {
-    const stack = useClassRefKey(magicStack.symbol, 0);
-
-    //optimization after first call in the same rendering phase
-    if (!useClassEffectExist(magicStack.cleanSymbol)) {
-        //clean stack after render
-        useClassEffectKey(magicStack.cleanSymbol, () => {
-            stack.current = 0;
-        });
+    //inject next renders stack counter cleaner
+    const self = getMagicSelf();
+    if (!self[MAGIC_STACKS]) {
+        self[MAGIC_STACKS] = {};
+        const _render = self.render.bind(self);
+        self.render = (...arggs) => {
+            Object.getOwnPropertySymbols(self[MAGIC_STACKS]).forEach((k) => {
+                self[MAGIC_STACKS][k] = 0;
+            });
+            return _render(...arggs);
+        };
     }
 
-    //update stack counter
-    stack.current += 1;
+    //stack counter init
+    if (!self[MAGIC_STACKS][magicStack.symbol]) {
+        self[MAGIC_STACKS][magicStack.symbol] = 0;
+    }
 
-    return hook(magicStack.getKey(stack.current), ...args);
+    //stack counter update
+    self[MAGIC_STACKS][magicStack.symbol] += 1;
+
+    return hook(magicStack.getKey(self[MAGIC_STACKS][magicStack.symbol]), ...args);
 }
