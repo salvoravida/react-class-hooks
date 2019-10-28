@@ -9,6 +9,7 @@ import { useClassCallback } from './core/useClassCallback';
 import { useClassReducer } from './core/useClassReducer';
 import { useClassRef, refCallback } from './core/useClassRef';
 import { useClassContext } from './core/useClassContext';
+import { useClassImperativeHandle } from './core/useClassImperativeHandle';
 
 const useClassLayoutEffect = useClassEffect;
 
@@ -22,4 +23,5 @@ export {
     useClassRef,
     refCallback,
     useClassContext,
+    useClassImperativeHandle,
 };

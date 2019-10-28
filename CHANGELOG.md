@@ -4,6 +4,7 @@ v. 0.4.0
 *  useClassEffect - fix ConcurrentMode 
 *  hooks stack counter - fix ConcurrentMode
 *  build optimization - removed babel slicedToArray 
+*  add useClassImperativeHandle hook
 
 v. 0.3.6
 -----------

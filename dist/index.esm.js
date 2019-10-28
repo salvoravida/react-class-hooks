@@ -408,9 +408,36 @@ useClassContext.create = function (name) {
   return createNamedHook(name, useClassContextKey);
 };
 
+function useClassImperativeHandle(ref, create, deps) {
+  invariant(typeof create === 'function', "Expected useImperativeHandle() second argument to be a function that creates a handle. Instead received: ".concat(create !== null ? _typeof(create) : 'null'));
+  invariant(deps === null || deps === undefined || Array.isArray(deps), 'Hook received a final argument that is not an array!');
+  var effectDeps = deps !== null && deps !== undefined ? deps.concat([ref]) : null; // eslint-disable-next-line consistent-return
+
+  useClassEffect(function () {
+    if (typeof ref === 'function') {
+      var refCallback = ref;
+      refCallback(create()); // eslint-disable-next-line func-names
+
+      return function () {
+        refCallback(null);
+      };
+    }
+
+    if (ref !== null && ref !== undefined) {
+      var refObject = ref;
+      invariant(refObject.hasOwnProperty('current'), "Expected useImperativeHandle() first argument to either be a ref callback or React.createRef() object. Instead received: an object with keys {".concat(Object.keys(refObject).join(', '), "}"));
+      refObject.current = create(); // eslint-disable-next-line func-names
+
+      return function () {
+        refObject.current = null;
+      };
+    }
+  }, effectDeps);
+}
+
 /**
  *  https://github.com/salvoravida/react-class-hooks
  */
 var useClassLayoutEffect = useClassEffect;
 
-export { refCallback, useClassCallback, useClassContext, useClassEffect, useClassLayoutEffect, useClassMemo, useClassReducer, useClassRef, useClassState };
+export { refCallback, useClassCallback, useClassContext, useClassEffect, useClassImperativeHandle, useClassLayoutEffect, useClassMemo, useClassReducer, useClassRef, useClassState };
