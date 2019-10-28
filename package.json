@@ -1,6 +1,6 @@
 {
   "name": "react-class-hooks",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "description": "react-class-hooks",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

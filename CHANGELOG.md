@@ -1,3 +1,10 @@
+v. 0.4.0
+-----------
+*  useClassState - check newState!=prevState before update
+*  useClassEffect - fix ConcurrentMode 
+*  hooks stack counter - fix ConcurrentMode
+*  build optimization - removed babel slicedToArray 
+
 v. 0.3.6
 -----------
 *  add ESM build
