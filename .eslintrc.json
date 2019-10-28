@@ -5,6 +5,7 @@
   "extends": "airbnb",
   "rules": {
     "indent": ["error", 4],
+    "import/no-unresolved": 0,
     "no-underscore-dangle": "off",
     "max-len": "off",
     "camelcase": 0,
