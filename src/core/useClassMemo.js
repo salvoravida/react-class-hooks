@@ -48,6 +48,6 @@ export const useClassMemoKey = (keySymbol, creator, inputs) => {
 
 export const useClassMemo = createHook('Memos', useClassMemoKey);
 
-useClassMemo.create = name => createNamedHook(name, useClassMemoKey);
+useClassMemo.create = (name) => createNamedHook(name, useClassMemoKey);
 
-useClassMemo.createStack = stackName => createHook(stackName, useClassMemoKey);
+useClassMemo.createStack = (stackName) => createHook(stackName, useClassMemoKey);

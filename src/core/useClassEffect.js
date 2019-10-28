@@ -7,9 +7,9 @@ import { useClassEffectKey } from './useClassEffectKey';
 
 export const useClassEffect = createHook('Effects', useClassEffectKey);
 
-useClassEffect.create = name => createNamedHook(name, useClassEffectKey);
+useClassEffect.create = (name) => createNamedHook(name, useClassEffectKey);
 
-useClassEffect.createStack = stackName => createHook(stackName, useClassEffectKey);
+useClassEffect.createStack = (stackName) => createHook(stackName, useClassEffectKey);
 
 /*********************************************  alias -  may confuse ?  ***********************************************/
 

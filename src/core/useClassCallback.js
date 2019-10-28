@@ -11,6 +11,6 @@ export function useClassCallbackKey(keySymbol, callback, inputs) {
 
 export const useClassCallback = createHook('Callbacks', useClassCallbackKey);
 
-useClassCallback.create = name => createNamedHook(name, useClassCallbackKey);
+useClassCallback.create = (name) => createNamedHook(name, useClassCallbackKey);
 
-useClassCallback.createStack = stackName => createHook(stackName, useClassCallbackKey);
+useClassCallback.createStack = (stackName) => createHook(stackName, useClassCallbackKey);

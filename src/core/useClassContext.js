@@ -1,6 +1,7 @@
 /**
  *  https://github.com/salvoravida/react-class-hooks
  */
+
 import invariant from 'tiny-invariant';
 import { createNamedHook, createHook } from './createHook';
 import { checkSymbol, getMagicDispatcher } from './magicSelf';
@@ -14,4 +15,4 @@ export const useClassContextKey = (keySymbol, Context) => {
 
 export const useClassContext = createHook('Contexts', useClassContextKey);
 
-useClassContext.create = name => createNamedHook(name, useClassContextKey);
+useClassContext.create = (name) => createNamedHook(name, useClassContextKey);

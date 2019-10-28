@@ -1,6 +1,7 @@
 /**
  *  https://github.com/salvoravida/react-class-hooks
  */
+
 import { getMagicSelf, checkSymbol, MAGIC_STATES } from './magicSelf';
 
 export function useClassStateKey(keySymbol, initialValue) {

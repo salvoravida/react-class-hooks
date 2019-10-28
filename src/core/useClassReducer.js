@@ -20,4 +20,4 @@ export const useClassReducerKey = (keySymbol, reducer, initialState) => {
 
 export const useClassReducer = createHook('Reducers', useClassReducerKey);
 
-useClassReducer.create = name => createNamedHook(name, useClassReducerKey);
+useClassReducer.create = (name) => createNamedHook(name, useClassReducerKey);

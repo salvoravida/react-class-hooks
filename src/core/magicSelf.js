@@ -38,9 +38,9 @@ export function getMagicFiber() {
 }
 
 export const getMagicDispatcher = () => {
-    const s = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED
+    const s = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
     return s.ReactCurrentDispatcher.current;
-}
+};
 
 export function checkSymbol(name, keySymbol) {
     invariant(typeof keySymbol === 'symbol', `${name} - Expected a Symbol for key!`);
