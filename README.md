@@ -143,6 +143,7 @@ Currently supported api:
 * useClassRef -> a mutable ref object with .current 
 * useClassContext -> use Context
 * useClassLayoutEffect -> alias for useClassEffect
+* useClassImperativeHandle -> just for compatibility with useImperativeHandle. 
 
 ## Advanded Class Hooks : Named Hooks
 Hooks are anonymous, so order matters in the "render" method, because there is no other way to differentiate from one call to another in the same render.
@@ -268,39 +269,7 @@ class App extends React.PureComponent {
 ```
 
 ## How can i create Universal Custom Hooks in future?
-UPDATE 2019.03.04 -> https://github.com/salvoravida/react-universal-hooks
-```javascript
-import { useState, useEffect } from 'react';
-import { useClassState, useClassEffect } from 'react-class-hooks';
-
-const useClassWsState= useClassState.create("WindowSize");
-const useClassWsEffect= useClassEffect.create("WindowSize");
-
-const _useWindowSize = (useState, useEffect, ...argsIfAny) => {
-    const [size, setSize] = useState({
-        width: window.innerWidth,
-        height: window.innerHeight,
-    });
-    const handle = (() => {
-        setSize({
-            width: window.innerWidth,
-            height: window.innerHeight,
-        });
-    });
-    
-    useEffect(() => {
-        window.addEventListener('resize', handle);
-        return () => {
-            window.removeEventListener('resize', handle);
-        };
-    }, []);
-    return size;
-}; 
-
-export const useWindowSize = _useWindowSize.bind(null, useState, useEffect);
-
-export const useClassWindowSize = _useWindowSize.bind(null, useClassWsState, useClassWsEffect);
-```
+https://github.com/salvoravida/react-universal-hooks
 
 # Feedback
 
