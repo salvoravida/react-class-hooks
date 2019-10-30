@@ -3,16 +3,13 @@
  */
 
 import invariant from 'tiny-invariant';
-import { createNamedHook, createHook } from './createHook';
-import { checkSymbol, getMagicDispatcher } from './magicSelf';
+import { getMagicDispatcher, getMagicSelf } from './magicSelf';
 
-export const useClassContextKey = (keySymbol, Context) => {
-    checkSymbol('useClassContext', keySymbol);
-    invariant(Context && Context.Provider && Context.Consumer, 'Context should be React.createContext object!');
-
-    return getMagicDispatcher().readContext(Context);
+export const useClassContext = (context, observedBits) => {
+  getMagicSelf(); // invariant hook outside render method
+  invariant(
+    context && context.Provider && context.Consumer,
+    'Context should be React.createContext object!'
+  );
+  return getMagicDispatcher().readContext(context, observedBits);
 };
-
-export const useClassContext = createHook('Contexts', useClassContextKey);
-
-useClassContext.create = (name) => createNamedHook(name, useClassContextKey);
