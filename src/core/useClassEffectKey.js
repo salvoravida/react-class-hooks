@@ -68,8 +68,3 @@ export const useClassEffectKey = (keySymbol, creator, inputs, onlyDidUpdate = fa
         self[MAGIC_EFFECTS][keySymbol].inputs = inputs;
     }
 };
-
-export function useClassEffectExist(keySymbol) {
-    const self = getMagicSelf();
-    return !!self[MAGIC_EFFECTS] && !!self[MAGIC_EFFECTS].hasOwnProperty(keySymbol);
-}
