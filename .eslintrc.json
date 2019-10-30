@@ -2,5 +2,11 @@
   "env": {
     "browser": true
   },
-  "extends": ["@salvoravida"]
+  "extends": ["@salvoravida"],
+  "rules": {
+    "react-hooks/rules-of-hooks": 0,
+    "no-prototype-builtins": "off",
+    "no-self-compare": "off",
+    "no-underscore-dangle": "off"
+  }
 }

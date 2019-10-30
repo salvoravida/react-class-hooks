@@ -14,14 +14,14 @@ import { useClassImperativeHandle } from './core/useClassImperativeHandle';
 const useClassLayoutEffect = useClassEffect;
 
 export {
-    useClassState,
-    useClassEffect,
-    useClassLayoutEffect,
-    useClassMemo,
-    useClassCallback,
-    useClassReducer,
-    useClassRef,
-    refCallback,
-    useClassContext,
-    useClassImperativeHandle,
+  useClassState,
+  useClassEffect,
+  useClassLayoutEffect,
+  useClassMemo,
+  useClassCallback,
+  useClassReducer,
+  useClassRef,
+  refCallback,
+  useClassContext,
+  useClassImperativeHandle
 };

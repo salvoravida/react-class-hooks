@@ -9,7 +9,6 @@ import invariant from 'tiny-invariant';
 React.PureComponent.prototype.componentDidMount = () => {};
 React.Component.prototype.componentDidMount = () => {};
 
-//TODO - polyfill
 invariant(typeof Symbol === 'function' && Symbol.for, 'react-class-hooks needs Symbols!');
 
 // Separate objects for better debugging.
@@ -19,29 +18,34 @@ export const MAGIC_MEMOS = Symbol.for('magicMemos');
 export const MAGIC_REFS = Symbol.for('magicRefs');
 export const MAGIC_STACKS = Symbol.for('magicStacks');
 
-//React 15.3.2 support + Polyfill
+const ReactInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
+// React 15.3.2 support + Polyfill
 const instanceKey = React.version.indexOf('16') === 0 ? 'stateNode' : '_instance';
 
 if (React.version.indexOf('15') === 0) {
-    invariant(React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
-        'Please for React ^15.3.2 - 15.6.2 import "react-class-hooks/poly15" in your root index.js!');
+  invariant(
+    ReactInternals,
+    'Please for React ^15.3.2 - 15.6.2 import "react-class-hooks/poly15" in your root index.js!'
+  );
 }
 
 export function getMagicSelf() {
-    invariant(React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current,
-        'You are using Hooks outside of "render" React.Component Method!');
-    return React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current[instanceKey];
+  invariant(
+    ReactInternals.ReactCurrentOwner.current,
+    'You are using Hooks outside of "render" React.Component Method!'
+  );
+  return ReactInternals.ReactCurrentOwner.current[instanceKey];
 }
 
 export function getMagicFiber() {
-    return React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current;
+  return ReactInternals.ReactCurrentOwner.current;
 }
 
 export const getMagicDispatcher = () => {
-    const s = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
-    return s.ReactCurrentDispatcher.current;
+  return ReactInternals.ReactCurrentDispatcher.current;
 };
 
 export function checkSymbol(name, keySymbol) {
-    invariant(typeof keySymbol === 'symbol', `${name} - Expected a Symbol for key!`);
+  invariant(typeof keySymbol === 'symbol', `${name} - Expected a Symbol for key!`);
 }
