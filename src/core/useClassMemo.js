@@ -6,6 +6,7 @@ import invariant from 'tiny-invariant';
 import { checkSymbol, getMagicSelf, MAGIC_MEMOS } from './magicSelf';
 import { inputsArrayEqual } from './inputsEqual';
 import { createHook, createNamedHook } from './createHook';
+import { setDevToolsHookState } from './devTools';
 
 export const useClassMemoKey = (keySymbol, creator, inputs) => {
   checkSymbol('useClassMemo', keySymbol);
@@ -43,7 +44,9 @@ export const useClassMemoKey = (keySymbol, creator, inputs) => {
     }
   }
 
-  return self[MAGIC_MEMOS][keySymbol].value;
+  const returnValue = self[MAGIC_MEMOS][keySymbol].value;
+  setDevToolsHookState(keySymbol.description, returnValue);
+  return returnValue;
 };
 
 export const useClassMemo = createHook('Memos', useClassMemoKey);

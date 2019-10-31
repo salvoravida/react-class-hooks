@@ -3,6 +3,7 @@
  */
 
 import { checkSymbol, getMagicSelf, MAGIC_REFS } from './magicSelf';
+import { setDevToolsHookState } from './devTools';
 
 export function useClassRefKey(keySymbol, initialValue) {
   checkSymbol('useClassRefKey', keySymbol);
@@ -19,5 +20,7 @@ export function useClassRefKey(keySymbol, initialValue) {
     self[MAGIC_REFS][keySymbol] = ref;
   }
 
-  return self[MAGIC_REFS][keySymbol];
+  const returnValue = self[MAGIC_REFS][keySymbol];
+  setDevToolsHookState(keySymbol.description, returnValue);
+  return returnValue;
 }

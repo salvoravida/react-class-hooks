@@ -10,6 +10,8 @@ import { useClassReducer } from './core/useClassReducer';
 import { useClassRef, refCallback } from './core/useClassRef';
 import { useClassContext } from './core/useClassContext';
 import { useClassImperativeHandle } from './core/useClassImperativeHandle';
+import { useClassDebugValue } from './core/useClassDebugValue';
+import { supportReactDevTools } from './core/devTools';
 
 const useClassLayoutEffect = useClassEffect;
 
@@ -23,5 +25,7 @@ export {
   useClassRef,
   refCallback,
   useClassContext,
-  useClassImperativeHandle
+  useClassImperativeHandle,
+  useClassDebugValue,
+  supportReactDevTools
 };

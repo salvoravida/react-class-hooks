@@ -3,6 +3,7 @@
  */
 
 import { getMagicSelf, checkSymbol, MAGIC_STATES } from './magicSelf';
+import { setDevToolsHookState } from './devTools';
 
 export function useClassStateKey(keySymbol, initialValue) {
   checkSymbol('useClassStateKey', keySymbol);
@@ -29,5 +30,6 @@ export function useClassStateKey(keySymbol, initialValue) {
   }
 
   const { value, setValue } = self[MAGIC_STATES][keySymbol];
+  setDevToolsHookState(keySymbol.description, value);
   return [value, setValue];
 }
