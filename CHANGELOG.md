@@ -1,3 +1,9 @@
+v. 0.5.0
+-----------
+*  useClassContext - add observedBits
+*  add useClassDebugValue !
+*  support React Dev Tools! 
+
 v. 0.4.0
 -----------
 *  useClassState - check newState!=prevState before update

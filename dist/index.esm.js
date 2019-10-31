@@ -14,6 +14,21 @@ function _typeof(obj) {
   return _typeof(obj);
 }
 
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
 var isProduction = process.env.NODE_ENV === 'production';
 var prefix = 'Invariant failed';
 
@@ -129,6 +144,50 @@ function createNamedHook(name, hook) {
   return hook.bind(null, keySymbol);
 }
 
+var devToolConfig = {
+  active: false,
+  stateKey: '__UNIVERSAL_HOOKS__',
+  show: 'object' // object, array, map
+
+};
+function supportReactDevTools(_ref) {
+  var active = _ref.active,
+      stateKey = _ref.stateKey,
+      show = _ref.show;
+  if (stateKey) devToolConfig.stateKey = stateKey;
+  if (show) devToolConfig.show = show;
+  devToolConfig.active = !!active;
+}
+function setDevToolsHookState(name, state) {
+  if (devToolConfig.active) {
+    var self = getMagicSelf();
+    var stateKey = devToolConfig.stateKey,
+        show = devToolConfig.show;
+    if (!self.state) self.state = {};
+    if (!self.state[stateKey]) self.state[stateKey] = show === 'map' ? new Map() : show === 'array' ? [] : {};
+
+    if (show === 'map') {
+      self.state[stateKey].set(name, state);
+    } else if (show === 'array') {
+      var hookState = self.state[stateKey].find(function (h) {
+        return h.hasOwnProperty(name);
+      });
+
+      if (hookState) {
+        hookState[name] = state;
+      } else {
+        self.state[stateKey].push(_defineProperty({}, name, state));
+      }
+    } else {
+      var hookNames = Object.keys(self.state[stateKey]);
+      var hookName = hookNames.find(function (s) {
+        return s.split(':')[1] === name;
+      });
+      self.state[stateKey][hookName || "".concat(hookNames.length.toString().padStart(2, '0'), ":").concat(name)] = state;
+    }
+  }
+}
+
 /**
  *  https://github.com/salvoravida/react-class-hooks
  */
@@ -158,6 +217,7 @@ function useClassStateKey(keySymbol, initialValue) {
   var _self$MAGIC_STATES$ke = self[MAGIC_STATES][keySymbol],
       value = _self$MAGIC_STATES$ke.value,
       setValue = _self$MAGIC_STATES$ke.setValue;
+  setDevToolsHookState(keySymbol.description, value);
   return [value, setValue];
 }
 
@@ -301,7 +361,9 @@ var useClassMemoKey = function useClassMemoKey(keySymbol, creator, inputs) {
     }
   }
 
-  return self[MAGIC_MEMOS][keySymbol].value;
+  var returnValue = self[MAGIC_MEMOS][keySymbol].value;
+  setDevToolsHookState(keySymbol.description, returnValue);
+  return returnValue;
 };
 var useClassMemo = createHook('Memos', useClassMemoKey);
 
@@ -369,7 +431,9 @@ function useClassRefKey(keySymbol, initialValue) {
     self[MAGIC_REFS][keySymbol] = ref;
   }
 
-  return self[MAGIC_REFS][keySymbol];
+  var returnValue = self[MAGIC_REFS][keySymbol];
+  setDevToolsHookState(keySymbol.description, returnValue);
+  return returnValue;
 }
 
 /**
@@ -395,12 +459,16 @@ var refCallback = function refCallback(refObject) {
 /**
  *  https://github.com/salvoravida/react-class-hooks
  */
-var useClassContext = function useClassContext(context, observedBits) {
+function useClassContextKey(keySymbol, context, observedBits) {
+  checkSymbol('useClassContext', keySymbol);
   getMagicSelf(); // invariant hook outside render method
 
   invariant(context && context.Provider && context.Consumer, 'Context should be React.createContext object!');
-  return getMagicDispatcher().readContext(context, observedBits);
-};
+  var contextValue = getMagicDispatcher().readContext(context, observedBits);
+  setDevToolsHookState(keySymbol.description, contextValue);
+  return contextValue;
+}
+var useClassContext = createHook('Contexts', useClassContextKey);
 
 function useClassImperativeHandle(ref, create, deps) {
   invariant(typeof create === 'function', "Expected useImperativeHandle() second argument to be a function that creates a handle. Instead received: ".concat(create !== null ? _typeof(create) : 'null'));
@@ -432,6 +500,16 @@ function useClassImperativeHandle(ref, create, deps) {
 /**
  *  https://github.com/salvoravida/react-class-hooks
  */
+function useClassDebugValueKey(keySymbol, value, formatter) {
+  checkSymbol('useDebugValueKey', keySymbol);
+  var viewValue = typeof formatter === "function" ? formatter(value) : value;
+  setDevToolsHookState(keySymbol.description, viewValue);
+}
+var useClassDebugValue = createHook('DebugValue', useClassDebugValueKey);
+
+/**
+ *  https://github.com/salvoravida/react-class-hooks
+ */
 var useClassLayoutEffect = useClassEffect;
 
-export { refCallback, useClassCallback, useClassContext, useClassEffect, useClassImperativeHandle, useClassLayoutEffect, useClassMemo, useClassReducer, useClassRef, useClassState };
+export { refCallback, supportReactDevTools, useClassCallback, useClassContext, useClassDebugValue, useClassEffect, useClassImperativeHandle, useClassLayoutEffect, useClassMemo, useClassReducer, useClassRef, useClassState };
