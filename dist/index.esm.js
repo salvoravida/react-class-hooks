@@ -1,6 +1,8 @@
 import React from 'react';
 
 function _typeof(obj) {
+  "@babel/helpers - typeof";
+
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
     _typeof = function (obj) {
       return typeof obj;
@@ -39,9 +41,9 @@ function invariant(condition, message) {
 
   if (isProduction) {
     throw new Error(prefix);
-  } else {
-    throw new Error(prefix + ": " + (message || ''));
   }
+
+  throw new Error(prefix + ": " + (message || ''));
 }
 
 React.PureComponent.prototype.componentDidMount = function () {};
@@ -502,7 +504,7 @@ function useClassImperativeHandle(ref, create, deps) {
  */
 function useClassDebugValueKey(keySymbol, value, formatter) {
   checkSymbol('useDebugValueKey', keySymbol);
-  var viewValue = typeof formatter === "function" ? formatter(value) : value;
+  var viewValue = typeof formatter === 'function' ? formatter(value) : value;
   setDevToolsHookState(keySymbol.description, viewValue);
 }
 var useClassDebugValue = createHook('DebugValue', useClassDebugValueKey);
