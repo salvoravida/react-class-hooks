@@ -20,10 +20,12 @@ export const MAGIC_STACKS = Symbol.for('magicStacks');
 
 const ReactInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 
-// React 15.3.2 support + Polyfill
-const instanceKey = React.version.indexOf('16') === 0 ? 'stateNode' : '_instance';
+const isReact15 = React.version.indexOf('15') === 0
 
-if (React.version.indexOf('15') === 0) {
+// React 15.3.2 support + Polyfill
+const instanceKey = isReact15 ? '_instance' : 'stateNode';
+
+if (isReact15) {
   invariant(
     ReactInternals,
     'Please for React ^15.3.2 - 15.6.2 import "react-class-hooks/poly15" in your root index.js!'
