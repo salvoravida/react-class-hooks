@@ -54,11 +54,12 @@ var MAGIC_EFFECTS = Symbol["for"]('magicEffects');
 var MAGIC_MEMOS = Symbol["for"]('magicMemos');
 var MAGIC_REFS = Symbol["for"]('magicRefs');
 var MAGIC_STACKS = Symbol["for"]('magicStacks');
-var ReactInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED; // React 15.3.2 support + Polyfill
+var ReactInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+var isReact15 = React.version.indexOf('15') === 0; // React 15.3.2 support + Polyfill
 
-var instanceKey = React.version.indexOf('16') === 0 ? 'stateNode' : '_instance';
+var instanceKey = isReact15 ? '_instance' : 'stateNode';
 
-if (React.version.indexOf('15') === 0) {
+if (isReact15) {
   invariant(ReactInternals, 'Please for React ^15.3.2 - 15.6.2 import "react-class-hooks/poly15" in your root index.js!');
 }
 
